@@ -1,0 +1,53 @@
+Sub StockAnalysis()
+
+Dim ws As Worksheet
+Dim ticker As String
+Dim yearlyChange As Double
+Dim percentChange As Double
+Dim totalVolume As Double
+
+Dim summaryRow As Integer
+summaryRow = 2
+
+For Each ws In Worksheets
+
+ws.Activate
+
+lastRow = ws.Cells(Rows.Count, 1).End(xlUp).Row
+
+For i = 2 To lastRow
+
+If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+
+    ticker = ws.Cells(i, 1).Value
+    yearlyChange = ws.Cells(i, 6).Value - ws.Cells(i, 3).Value
+    percentChange = (yearlyChange / ws.Cells(i, 3).Value)
+    totalVolume = totalVolume + ws.Cells(i, 7).Value
+
+    ws.Range("I" & summaryRow).Value = ticker
+    ws.Range("J" & summaryRow).Value = yearlyChange
+    ws.Range("K" & summaryRow).Value = percentChange
+    ws.Range("L" & summaryRow).Value = totalVolume
+
+    summaryRow = summaryRow + 1
+    totalVolume = 0
+
+Else
+
+    totalVolume = totalVolume + ws.Cells(i, 7).Value
+
+End If
+Next i
+
+Next ws
+
+End Sub
+Sub RunAnalysis()
+
+Dim ws As Worksheet
+
+For Each ws In Worksheets
+StockAnalysis
+Next ws
+
+End Sub
